@@ -1,15 +1,9 @@
-function collection(slug: string, getImport: (slug: string) => Promise<any>) {
-  return {
-    getValue: async (name: string) => {
-      const module = await getImport(slug)
-      return module[name]
-    },
-  }
+async function getImport(slug: string, exportName: string) {
+  const moduleExports = await import(`./${slug}.tsx`)
+  return moduleExports[exportName]
 }
 
-const components = collection('Button', (slug) => import(`./${slug}.tsx`))
-
 export default async function Home() {
-  const Button = await components.getValue('Button')
+  const Button = await getImport('components/Button', 'Button')
   return <Button />
 }
